@@ -1,28 +1,24 @@
+//======================== SETUP ========================//
 import express from "express";
 import cors from "cors";
-import pg from "pg";
-
-const pool = new pg.Pool({
-  database: "tasktime",
-});
-
+import postgres from "postgres";
+// import dotenv from "dotenv";
+// dontenv.config();
 const app = express();
-
+const PORT = process.env.port || 3000;
+const sql = postgres({ database: "kanban" });
+// const sql = postgres(process.env.DATABASE_URL);
 app.use(cors());
 app.use(express.json());
+app.use(express.static("./client"));
 
-app.get("/api/tasks", (req, res) => {
-  pool.query("SELECT * FROM tasks").then((result) => {
-    res.send(result.rows);
-  });
-});
+//===================== API ROUTES =====================//
+app.get("/api/tasks", (req, res) => {});
 
 app.post("/api/tasks", (req, res) => {
   const { description } = req.body;
   pool
-    .query("INSERT INTO tasks (description) VALUES ($1) RETURNING *", [
-      description,
-    ])
+    .query("INSERT INTO tasks (description) VALUES ($1) RETURNING *", [description])
     .then((result) => {
       res.send(result.rows[0]);
     });
@@ -38,13 +34,13 @@ app.delete("/api/tasks/:id", async (req, res) => {
 app.patch("/api/tasks/:id", async (req, res) => {
   const { id } = req.params;
   const { description } = req.body;
-  const result = await pool.query(
-    "UPDATE tasks SET description=$1 WHERE id=$2 RETURNING *",
-    [description, id]
-  );
+  const result = await pool.query("UPDATE tasks SET description=$1 WHERE id=$2 RETURNING *", [
+    description,
+    id,
+  ]);
   res.send(result.rows[0]);
 });
 
-app.listen(3000, () => {
-  console.log("listening on port 3000");
+app.listen(PORT, () => {
+  console.log(`listening on port ${PORT}`);
 });
