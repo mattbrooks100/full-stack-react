@@ -45,14 +45,14 @@ app.delete("/api/tasks/:id", (req, res, next) => {
     .catch(next);
 });
 
-app.patch("/api/tasks/:id", async (req, res) => {
+// PATCH - update an existing task
+app.patch("/api/tasks/:id", (req, res, next) => {
   const { id } = req.params;
-  const { description } = req.body;
-  const result = await pool.query("UPDATE tasks SET description=$1 WHERE id=$2 RETURNING *", [
-    description,
-    id,
-  ]);
-  res.send(result.rows[0]);
+  sql`UPDATE tasks SET ${sql(req.body)} WHERE id=${id} RETURNING *`
+    .then((result) => {
+      res.json(result[0]);
+    })
+    .catch(next);
 });
 
 app.listen(PORT, () => {
