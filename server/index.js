@@ -28,11 +28,21 @@ app.post("/api/tasks", (req, res, next) => {
     .catch(next);
 });
 
-app.delete("/api/tasks/:id", async (req, res) => {
+// DELETE - remove an existing task
+app.delete("/api/tasks/:id", (req, res, next) => {
   const { id } = req.params;
-
-  await pool.query("DELETE FROM tasks WHERE id = $1", [id]);
-  res.sendStatus(200);
+  sql`DELETE FROM tasks WHERE id=${id} RETURNING *`
+    .then((result) => {
+      if (result.length === 0) {
+        res
+          .status(404)
+          .set("Content-Type", "text/plain")
+          .send("Task not found: id is out of bounds.");
+      } else {
+        res.status(200).json(result[0]);
+      }
+    })
+    .catch(next);
 });
 
 app.patch("/api/tasks/:id", async (req, res) => {
