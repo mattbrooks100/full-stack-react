@@ -13,7 +13,9 @@ app.use(express.json());
 app.use(express.static("./client"));
 
 //===================== API ROUTES =====================//
-app.get("/api/tasks", (req, res) => {});
+app.get("/api/tasks", (req, res, next) => {
+  sql`SELECT * FROM tasks ORDER BY due_date ASC`.then((result) => res.json(result)).catch(next);
+});
 
 app.post("/api/tasks", (req, res) => {
   const { description } = req.body;

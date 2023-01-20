@@ -2,11 +2,13 @@ DROP TABLE IF EXISTS tasks;
 
 CREATE TABLE tasks (
   id SERIAL,
-  description TEXT
+  description TEXT,
+  due_date DATE,
+  to_do BOOLEAN,
+  in_progress BOOLEAN,
+  complete BOOLEAN
 );
 
-INSERT INTO tasks(description) VALUES('Do the dishes');
-INSERT INTO tasks(description) VALUES('Walk the dog');
-INSERT INTO tasks(description) VALUES('Sweep the floor');
-INSERT INTO tasks(description) VALUES('Do your homework');
-INSERT INTO tasks(description) VALUES('Beat Elden Ring');
+INSERT INTO tasks(description, due_date, to_do, in_progress, complete) VALUES 
+('Work on MVP', '2023-01-23', TRUE, FALSE, FALSE),
+('Drink more coffee', '2023-01-21', TRUE, FALSE, FALSE);
