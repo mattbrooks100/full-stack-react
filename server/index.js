@@ -13,17 +13,19 @@ app.use(express.json());
 app.use(express.static("./client"));
 
 //===================== API ROUTES =====================//
+// GET - read all tasks
 app.get("/api/tasks", (req, res, next) => {
   sql`SELECT * FROM tasks ORDER BY due_date ASC`.then((result) => res.json(result)).catch(next);
 });
 
-app.post("/api/tasks", (req, res) => {
-  const { description } = req.body;
-  pool
-    .query("INSERT INTO tasks (description) VALUES ($1) RETURNING *", [description])
+// POST - create a new task
+app.post("/api/tasks", (req, res, next) => {
+  const newTask = req.body;
+  sql`INSERT INTO tasks ${sql(newTask)} RETURNING *`
     .then((result) => {
-      res.send(result.rows[0]);
-    });
+      res.status(201).json(result);
+    })
+    .catch(next);
 });
 
 app.delete("/api/tasks/:id", async (req, res) => {
