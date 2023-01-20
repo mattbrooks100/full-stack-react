@@ -55,6 +55,16 @@ app.patch("/api/tasks/:id", (req, res, next) => {
     .catch(next);
 });
 
+// ERROR HANDLING
+app.use((err, req, res, next) => {
+  res.status(500).set("Content-Type", "plain/text").send("Internal Server Error");
+});
+
+app.use((req, res) => {
+  res.status(404).set("Content-Type", "plain/text").send("Not Found");
+});
+
+//=================== START THE SERVER ===================//
 app.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
 });
