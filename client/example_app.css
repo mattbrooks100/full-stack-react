@@ -3,9 +3,10 @@ body {
 }
 
 .header {
-  height: 50px;
-  background: #c4c3c3;
+  height: 2em;
+  background: #979797;
   font-size: 30px;
+  font-weight: bold;
   color: black;
   display: flex;
   align-items: center;
