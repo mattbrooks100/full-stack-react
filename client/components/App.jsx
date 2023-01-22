@@ -3,6 +3,7 @@ import { useRecoilState } from "recoil";
 import { tasksState } from "../state.js";
 import Header from "./Header.jsx";
 import Board from "./Board.jsx";
+import Footer from "./Footer.jsx";
 import axios from "axios";
 
 const App = () => {
@@ -20,6 +21,7 @@ const App = () => {
     <>
       <Header />
       <Board />
+      <Footer />
     </>
   );
 };
